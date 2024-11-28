@@ -29,8 +29,8 @@ jobs:
     - name: Run deploy script on server
       uses: appleboy/ssh-action@master
       with:
-        host: "${{ env.SSH_HOST }}"
-        username: "${{ env.SSH_USER }}"
+        host: 123
+        username: 123
         key_path: ssh_key
         port: 22
         script: |
