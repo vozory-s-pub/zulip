@@ -703,6 +703,7 @@ paths:
                                         "stream_post_policy": 1,
                                         "history_public_to_subscribers": true,
                                         "first_message_id": null,
+                                        "is_recently_active": true,
                                         "message_retention_days": null,
                                         "is_announcement_only": false,
                                         "color": "#76ce90",
@@ -1348,6 +1349,7 @@ paths:
                                         "stream_post_policy": 1,
                                         "history_public_to_subscribers": false,
                                         "first_message_id": null,
+                                        "is_recently_active": true,
                                         "message_retention_days": null,
                                         "is_announcement_only": false,
                                         "can_remove_subscribers_group": 2,
@@ -1407,6 +1409,7 @@ paths:
                                         "stream_post_policy": 1,
                                         "history_public_to_subscribers": false,
                                         "first_message_id": null,
+                                        "is_recently_active": true,
                                         "message_retention_days": null,
                                         "is_announcement_only": false,
                                         "can_remove_subscribers_group": 2,
@@ -2033,6 +2036,7 @@ paths:
                                               "stream_post_policy": 1,
                                               "history_public_to_subscribers": true,
                                               "first_message_id": 1,
+                                              "is_recently_active": true,
                                               "message_retention_days": null,
                                               "is_announcement_only": false,
                                               "can_remove_subscribers_group": 2,
@@ -2048,6 +2052,7 @@ paths:
                                               "invite_only": false,
                                               "is_web_public": false,
                                               "stream_post_policy": 1,
+                                              "is_recently_active": true,
                                               "history_public_to_subscribers": true,
                                               "first_message_id": 4,
                                               "message_retention_days": null,
@@ -2067,6 +2072,7 @@ paths:
                                               "stream_post_policy": 1,
                                               "history_public_to_subscribers": true,
                                               "first_message_id": 6,
+                                              "is_recently_active": true,
                                               "message_retention_days": null,
                                               "is_announcement_only": false,
                                               "can_remove_subscribers_group": 2,
@@ -2115,6 +2121,7 @@ paths:
                                         "stream_post_policy": 1,
                                         "history_public_to_subscribers": true,
                                         "first_message_id": 1,
+                                        "is_recently_active": true,
                                         "message_retention_days": null,
                                         "is_announcement_only": false,
                                         "can_remove_subscribers_group": 2,
@@ -13492,6 +13499,19 @@ paths:
                   items:
                     type: integer
                   example: [1, 10]
+                group_ids:
+                  description: |
+                    A list containing the [IDs of the user groups](/api/get-user-groups) that
+                    the newly created user will be automatically added to if the invitation
+                    is accepted. If the list is empty, then the new user will not be
+                    added to any user groups. The acting user must have permission to add users
+                    to the groups listed in this request.
+
+                    **Changes**: New in Zulip 10.0 (feature level 322).
+                  type: array
+                  items:
+                    type: integer
+                  example: []
                 include_realm_default_subscriptions:
                   description: |
                     Boolean indicating whether the newly created user should be subscribed
@@ -13531,6 +13551,8 @@ paths:
               invite_expires_in_minutes:
                 contentType: application/json
               stream_ids:
+                contentType: application/json
+              group_ids:
                 contentType: application/json
       responses:
         "200":
@@ -13670,6 +13692,20 @@ paths:
                     type: integer
                   default: []
                   example: [1, 10]
+                group_ids:
+                  description: |
+                    A list containing the [IDs of the user groups](/api/get-user-groups) that
+                    the newly created user will be automatically added to if the invitation
+                    is accepted. If the list is empty, then the new user will not be
+                    added to any user groups. The acting user must have permission to add users
+                    to the groups listed in this request.
+
+                    **Changes**: New in Zulip 10.0 (feature level 322).
+                  type: array
+                  items:
+                    type: integer
+                  default: []
+                  example: []
                 include_realm_default_subscriptions:
                   description: |
                     Boolean indicating whether the newly created user should be subscribed
@@ -13694,6 +13730,8 @@ paths:
               invite_expires_in_minutes:
                 contentType: application/json
               stream_ids:
+                contentType: application/json
+              group_ids:
                 contentType: application/json
       responses:
         "200":
@@ -14850,6 +14888,7 @@ paths:
                                 history_public_to_subscribers: {}
                                 first_message_id:
                                   nullable: true
+                                is_recently_active: {}
                                 is_announcement_only: {}
                                 can_remove_subscribers_group: {}
                                 stream_weekly_traffic:
@@ -19679,6 +19718,7 @@ paths:
                                 history_public_to_subscribers: {}
                                 first_message_id:
                                   nullable: true
+                                is_recently_active: {}
                                 is_announcement_only: {}
                                 can_remove_subscribers_group: {}
                                 stream_weekly_traffic:
@@ -19723,6 +19763,7 @@ paths:
                                 - is_announcement_only
                                 - can_remove_subscribers_group
                                 - stream_weekly_traffic
+                                - is_recently_active
                     example:
                       {
                         "msg": "",
@@ -19735,6 +19776,7 @@ paths:
                               "date_created": 1691057093,
                               "description": "A private channel",
                               "first_message_id": 18,
+                              "is_recently_active": true,
                               "history_public_to_subscribers": false,
                               "invite_only": true,
                               "is_announcement_only": false,
@@ -19754,6 +19796,7 @@ paths:
                               "date_created": 1691057093,
                               "description": "A default public channel",
                               "first_message_id": 21,
+                              "is_recently_active": true,
                               "history_public_to_subscribers": true,
                               "invite_only": false,
                               "is_announcement_only": false,
@@ -19820,6 +19863,7 @@ paths:
                           {
                             "description": "A Scandinavian country",
                             "first_message_id": 1,
+                            "is_recently_active": true,
                             "history_public_to_subscribers": true,
                             "date_created": 1691057093,
                             "creator_id": null,
@@ -21688,6 +21732,7 @@ components:
             history_public_to_subscribers: {}
             first_message_id:
               nullable: true
+            is_recently_active: {}
             is_announcement_only: {}
             can_remove_subscribers_group: {}
             stream_weekly_traffic:
@@ -21719,6 +21764,7 @@ components:
             - message_retention_days
             - history_public_to_subscribers
             - first_message_id
+            - is_recently_active
             - is_announcement_only
             - can_remove_subscribers_group
             - stream_weekly_traffic
@@ -21743,6 +21789,7 @@ components:
             history_public_to_subscribers: {}
             first_message_id:
               nullable: true
+            is_recently_active: {}
             is_announcement_only: {}
             can_remove_subscribers_group: {}
           required:
@@ -21759,6 +21806,7 @@ components:
             - message_retention_days
             - history_public_to_subscribers
             - first_message_id
+            - is_recently_active
             - is_announcement_only
             - can_remove_subscribers_group
     BasicChannelBase:
@@ -21878,6 +21926,16 @@ components:
             Is `null` for channels with no message history.
 
             **Changes**: New in Zulip 2.1.0.
+        is_recently_active:
+          type: boolean
+          description: |
+            Whether the channel has recent message activity. Clients should use this to implement
+            [sorting inactive channels to the bottom](/help/manage-inactive-channels)
+            if `demote_inactive_streams` is enabled.
+
+            **Changes**: New in Zulip 10.0 (feature level 323). Previously, clients implemented the
+            demote_inactive_streams from local message history, resulting in a choppy loading
+            experience.
         is_announcement_only:
           type: boolean
           deprecated: true
@@ -22884,6 +22942,15 @@ components:
             has older history that can be accessed.
 
             Is `null` for channels with no message history.
+        is_recently_active:
+          type: boolean
+          description: |
+            Whether the channel has recent message activity. Clients should use this to implement
+            [sorting inactive channels to the bottom](/help/manage-inactive-channels).
+
+            **Changes**: New in Zulip 10.0 (feature level 323). Previously, clients implemented the
+            demote_inactive_streams from local message history, resulting in a choppy loading
+            experience.
         stream_weekly_traffic:
           type: integer
           nullable: true

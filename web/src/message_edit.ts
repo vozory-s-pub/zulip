@@ -632,7 +632,7 @@ function start_edit_maintaining_scroll($row: JQuery, content: string): void {
 function start_edit_with_content(
     $row: JQuery,
     content: string,
-    edit_box_open_callback: () => void,
+    edit_box_open_callback?: () => void,
 ): void {
     start_edit_maintaining_scroll($row, content);
     if (edit_box_open_callback) {
@@ -642,7 +642,7 @@ function start_edit_with_content(
     upload.setup_upload(upload.edit_config(row_id));
 }
 
-export function start($row: JQuery, edit_box_open_callback: () => void): void {
+export function start($row: JQuery, edit_box_open_callback?: () => void): void {
     assert(message_lists.current !== undefined);
     const message = message_lists.current.get(rows.id($row));
     if (message === undefined) {
@@ -785,7 +785,7 @@ export function toggle_resolve_topic(
     message_id: number,
     old_topic_name: string,
     report_errors_in_global_banner: boolean,
-    $row: JQuery,
+    $row?: JQuery,
 ): void {
     let new_topic_name;
     const topic_is_resolved = resolved_topic.is_resolved(old_topic_name);
@@ -826,7 +826,7 @@ function do_toggle_resolve_topic(
     new_topic_name: string,
     topic_is_resolved: boolean,
     report_errors_in_global_banner: boolean,
-    $row: JQuery,
+    $row?: JQuery,
 ): void {
     if ($row) {
         show_toggle_resolve_topic_spinner($row);
@@ -1255,7 +1255,7 @@ export function maybe_show_edit($row: JQuery, id: number): void {
 
 function warn_user_about_unread_msgs(last_sent_msg_id: number, num_unread: number): void {
     confirm_dialog.launch({
-        html_heading: $t({defaultMessage: "Edit last sent message"}),
+        html_heading: $t({defaultMessage: "Edit your last message?"}),
         html_body: render_confirm_edit_messages({
             num_unread,
         }),
@@ -1473,7 +1473,7 @@ function show_message_moved_toast(toast_params: ToastParams): void {
 export function move_topic_containing_message_to_stream(
     message_id: number,
     new_stream_id: number | undefined,
-    new_topic_name: string,
+    new_topic_name: string | undefined,
     send_notification_to_new_thread: boolean,
     send_notification_to_old_thread: boolean,
     propagate_mode: string,

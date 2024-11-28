@@ -2,10 +2,8 @@
 
 const assert = require("node:assert/strict");
 
-const {mock_esm, zrequire} = require("./lib/namespace.cjs");
+const {zrequire} = require("./lib/namespace.cjs");
 const {run_test} = require("./lib/test.cjs");
-
-const stream_topic_history = mock_esm("../src/stream_topic_history");
 
 const settings_config = zrequire("settings_config");
 const pm_conversations = zrequire("pm_conversations");
@@ -199,6 +197,7 @@ test("sort_streams", ({override, override_rewire}) => {
             stream_weekly_traffic: 0,
             subscribed: true,
             is_muted: false,
+            is_recently_active: true,
         },
         {
             stream_id: 102,
@@ -207,6 +206,7 @@ test("sort_streams", ({override, override_rewire}) => {
             stream_weekly_traffic: 100,
             subscribed: true,
             is_muted: false,
+            is_recently_active: true,
         },
         {
             stream_id: 103,
@@ -215,6 +215,7 @@ test("sort_streams", ({override, override_rewire}) => {
             stream_weekly_traffic: 0,
             subscribed: true,
             is_muted: true,
+            is_recently_active: true,
         },
         {
             stream_id: 104,
@@ -223,6 +224,7 @@ test("sort_streams", ({override, override_rewire}) => {
             stream_weekly_traffic: 100,
             subscribed: true,
             is_muted: false,
+            is_recently_active: true,
         },
         {
             stream_id: 105,
@@ -231,6 +233,7 @@ test("sort_streams", ({override, override_rewire}) => {
             stream_weekly_traffic: 0,
             subscribed: true,
             is_muted: false,
+            is_recently_active: false,
         },
         {
             stream_id: 106,
@@ -239,6 +242,7 @@ test("sort_streams", ({override, override_rewire}) => {
             stream_weekly_traffic: 2,
             subscribed: true,
             is_muted: false,
+            is_recently_active: true,
         },
     ];
 
@@ -249,11 +253,6 @@ test("sort_streams", ({override, override_rewire}) => {
     );
 
     stream_list_sort.set_filter_out_inactives();
-    override(
-        stream_topic_history,
-        "stream_has_topics",
-        (stream_id) => ![105, 205].includes(stream_id),
-    );
     override_rewire(compose_state, "stream_name", () => "Dev");
 
     test_streams = th.sort_streams(test_streams, "d");
@@ -281,30 +280,35 @@ test("sort_streams", ({override, override_rewire}) => {
             name: "Dev",
             description: "development help",
             subscribed: true,
+            is_recently_active: true,
         },
         {
             stream_id: 202,
             name: "Docs",
             description: "writing docs",
             subscribed: true,
+            is_recently_active: true,
         },
         {
             stream_id: 203,
             name: "Derp",
             description: "derping around",
             subscribed: true,
+            is_recently_active: true,
         },
         {
             stream_id: 204,
             name: "Denmark",
             description: "visiting Denmark",
             subscribed: true,
+            is_recently_active: true,
         },
         {
             stream_id: 205,
             name: "dead",
             description: "dead stream",
             subscribed: true,
+            is_recently_active: false,
         },
     ];
 
@@ -418,6 +422,55 @@ test("sort_languages on actual data", () => {
     test_langs = language_items(["js", "javascript", "java"]);
     test_langs = th.sort_languages(test_langs, "js");
     assert.deepEqual(test_langs, language_items(["js", "java"]));
+});
+
+test("sort_user_groups", () => {
+    const test_user_groups = [
+        {
+            id: 1,
+            name: "Developers",
+            description: "Group of developers",
+        },
+        {
+            id: 2,
+            name: "Designers",
+            description: "Group of designers",
+        },
+        {
+            id: 3,
+            name: "DevOps",
+            description: "Group of DevOps engineers",
+        },
+        {
+            id: 4,
+            name: "Docs",
+            description: "Group of documentation writers",
+        },
+        {
+            id: 5,
+            name: "Devs",
+            description: "Another group of developers",
+        },
+    ];
+
+    // Test sorting by user group name
+    let sorted_user_groups = th.sort_user_groups(test_user_groups, "De");
+
+    // Assert that the groups are sorted correctly by name
+    assert.deepEqual(sorted_user_groups[0].name, "Designers"); // Exact match with query
+    assert.deepEqual(sorted_user_groups[1].name, "Developers");
+    assert.deepEqual(sorted_user_groups[2].name, "DevOps");
+    assert.deepEqual(sorted_user_groups[3].name, "Devs");
+    assert.deepEqual(sorted_user_groups[4].name, "Docs");
+
+    // Test sorting with a different query
+    sorted_user_groups = th.sort_user_groups(test_user_groups, "Do");
+
+    assert.deepEqual(sorted_user_groups[0].name, "Docs"); // Exact match with query
+    assert.deepEqual(sorted_user_groups[1].name, "Designers");
+    assert.deepEqual(sorted_user_groups[2].name, "Developers");
+    assert.deepEqual(sorted_user_groups[3].name, "DevOps");
+    assert.deepEqual(sorted_user_groups[4].name, "Devs");
 });
 
 function get_typeahead_result(query, current_stream_id, current_topic) {

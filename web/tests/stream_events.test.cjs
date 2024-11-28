@@ -33,6 +33,7 @@ mock_esm("../src/recent_view_ui", {
 });
 mock_esm("../src/settings_notifications", {
     update_page() {},
+    user_settings_panel: "stub", // Not used, but can't be undefined
 });
 mock_esm("../src/overlays", {
     streams_open: () => true,
@@ -220,6 +221,16 @@ test("update_property", ({override}) => {
         assert.equal($checkbox.prop("checked"), true);
     }
 
+    // Test change in stream active status
+    {
+        let sidebar_updated_for_stream_active_status = false;
+        override(stream_list, "update_streams_sidebar", () => {
+            sidebar_updated_for_stream_active_status = true;
+        });
+        stream_events.update_property(stream_id, "is_recently_active", false);
+        assert.equal(sidebar_updated_for_stream_active_status, true);
+    }
+
     // Test stream privacy change event
     {
         const stub = make_stub();
@@ -276,23 +287,11 @@ test("update_property", ({override}) => {
     }
 });
 
-test("marked_unsubscribed (code coverage)", () => {
-    // We don't error for unsubscribed streams for some reason.
-    stream_events.mark_unsubscribed(undefined);
-});
-
 test("marked_(un)subscribed (early return)", () => {
     // The early-return prevents us from exploding or needing
     // to override functions with side effects
     stream_events.mark_subscribed({subscribed: true});
     stream_events.mark_unsubscribed({subscribed: false});
-});
-
-test("marked_subscribed (error)", () => {
-    // Test undefined error
-    blueslip.expect("error", "Undefined sub passed to mark_subscribed");
-    stream_events.mark_subscribed(undefined, [], "yellow");
-    blueslip.reset();
 });
 
 test("marked_subscribed (normal)", ({override}) => {
@@ -479,7 +478,18 @@ test("process_subscriber_update", ({override, override_rewire}) => {
     const userIds = [104, 2, 3];
     // Sample stream IDs
     const streamIds = [1, 2, 3];
-
+    stream_data.add_sub({
+        stream_id: 1,
+        name: "Rome",
+    });
+    stream_data.add_sub({
+        stream_id: 2,
+        name: "Denmark",
+    });
+    stream_data.add_sub({
+        stream_id: 3,
+        name: "Paris",
+    });
     // Call the function being tested
     stream_events.process_subscriber_update(userIds, streamIds);
 

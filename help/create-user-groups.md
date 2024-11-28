@@ -1,11 +1,15 @@
 # Create user groups
 
+{!cloud-paid-plans-only.md!}
+
 {!user-groups-intro.md!}
 
 Many organizations find it helpful to create groups for:
 
 - Each team, e.g., “mobile”, “design”, or “IT”.
-- Leadership roles, e.g., “managers”, “engineering-leads”.
+- Leadership roles, e.g., “managers”, “engineering-managers”.
+
+{!user-subgroups-intro.md!}
 
 {!user-groups-applications.md!}
 

@@ -20,6 +20,21 @@ format used by the Zulip server that they are interacting with.
 
 ## Changes in Zulip 10.0
 
+**Feature level 323**
+
+* [`POST /register`](/api/register-queue), [`GET
+  /events`](/api/get-events), [`GET /streams`](/api/get-streams),
+  [`GET /streams/{stream_id}`](/api/get-stream-by-id): Added a new
+  field `is_recently_active` to stream objects as a new deterministic
+  source of truth for `demote_inactive_streams` activity decisions.
+
+**Feature level 322**
+
+* [`POST /invites`](/api/send-invites), [`POST
+  /invites/multiuse`](/api/create-invite-link): Added a new parameter
+  `group_ids` which allows users to be added to user groups through
+  invitations.
+
 **Feature level 321**
 
 * `PATCH /realm`, [`GET /events`](/api/get-events),

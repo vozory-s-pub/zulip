@@ -34,7 +34,7 @@ DESKTOP_WARNING_VERSION = "5.9.3"
 # new level means in api_docs/changelog.md, as well as "**Changes**"
 # entries in the endpoint's documentation in `zulip.yaml`.
 
-API_FEATURE_LEVEL = 321  # Last bumped for can_invite_users_group
+API_FEATURE_LEVEL = 323  # Last bumped for "GET /streams `is_recently_active`"
 
 # Bump the minor PROVISION_VERSION to indicate that folks should provision
 # only when going from an old version of the code to a newer version. Bump
@@ -49,4 +49,4 @@ API_FEATURE_LEVEL = 321  # Last bumped for can_invite_users_group
 #   historical commits sharing the same major version, in which case a
 #   minor version bump suffices.
 
-PROVISION_VERSION = (303, 0)  # bumped 2024-11-18 for types-defusedxml
+PROVISION_VERSION = (305, 0)  # bumped 2024-11-27 to downgrade @uppy/tus
