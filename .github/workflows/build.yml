@@ -3,7 +3,7 @@ name: Build and deploy docker image
 on:
   push:
     branches: [ "main" ]
-  pull_request_target:
+  pull_request:
     branches: [ "main" ]
 # trigger build
 jobs:
@@ -29,8 +29,8 @@ jobs:
     - name: Run deploy script on server
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ env.SSH_HOST }}
-        username: ${{ env.SSH_USER }}
+        host: "${{ env.SSH_HOST }}"
+        username: "${{ env.SSH_USER }}"
         key_path: ssh_key
         port: 22
         script: |
