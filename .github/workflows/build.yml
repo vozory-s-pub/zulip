@@ -25,7 +25,9 @@ jobs:
         echo "${{ env.SSH_KEY }}" | base64 -d > ssh_key
         chmod 600 ssh_key
 
-
+    - name: print
+      run: |
+        echo ${{ env.SSH_HOST }}
     - name: Run deploy script on server
       uses: appleboy/ssh-action@master
       with:
