@@ -1,16 +1,42 @@
-name: Docker Image CI
+name: Build and deploy docker image
 
 on:
   push:
-    branches: [ "acme-branch" ]
-  pull_request:
-    branches: [ "acme-branch" ]
+    branches:
+      - main
 
 jobs:
-
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
+
+    - name: Set environment variables
+      id: set_env_vars
+      run: |
+        if [ "${GITHUB_REF}" == "refs/heads/acme-branch" ]; then
+          echo "SSH_HOST=${{ secrets.SERVER_SSH_HOST_DEV }}" >> $GITHUB_ENV
+          echo "SSH_USER=${{ secrets.SERVER_SSH_USER_DEV }}" >> $GITHUB_ENV
+          echo "SSH_KEY=${{ secrets.SERVER_SSH_KEY_DEV }}" >> $GITHUB_ENV
+        fi
+
+    - name: Decode base64 SSH Key
+      run: |
+        echo "${{ env.SSH_KEY }}" | base64 -d > ssh_key
+        chmod 600 ssh_key
+
+
+    - name: Run deploy script on server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USER }}
+        key_path: ssh_key
+        port: 22
+        script: |
+          echo "Starting a long zulip build process..."
+          sudo docker compose --project-directory chat stop
+          sudo nohup bash -c 'sudo docker compose --project-directory chat build zulip --no-cache && sudo docker compose --project-directory chat up -d' 2>&1 &
+          echo "Build process started in the background."
+
+    - name: Cleanup SSH Key
+      run: rm -f ssh_key
