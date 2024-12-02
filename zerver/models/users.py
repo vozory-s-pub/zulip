@@ -471,6 +471,13 @@ class UserProfile(AbstractBaseUser, PermissionsMixin, UserBaseSettings):
     # graduation year, etc.
     full_name = models.CharField(max_length=MAX_NAME_LENGTH)
 
+    # Custom fields
+    telegram_id = models.BigIntegerField(null=True, blank=True, help_text="Telegram User ID")
+    telegram_username = models.CharField(max_length=150, null=True, blank=True, help_text="Telegram Username")
+    first_name = models.CharField(max_length=150, null=True, blank=True, help_text="First Name")
+    last_name = models.CharField(max_length=150, null=True, blank=True, help_text="Last Name")
+    phone_number = models.CharField(max_length=15, null=True, blank=True, help_text="Phone Number")
+
     date_joined = models.DateTimeField(default=timezone_now)
 
     # Terms of Service version number that this user has accepted. We
