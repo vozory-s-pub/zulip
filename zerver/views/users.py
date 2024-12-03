@@ -716,6 +716,14 @@ def create_user_backend(
     if not check_password_strength(password):
         raise JsonableError(str(PASSWORD_TOO_WEAK_ERROR))
 
+    extra_data = {
+        'telegram_id': telegram_id,
+        'telegram_username': telegram_username,
+        'first_name': first_name,
+        'last_name': last_name,
+        'phone_number': phone_number
+    }
+
     target_user = do_create_user(
         email,
         password,
@@ -729,14 +737,15 @@ def create_user_backend(
         # Service on first login.
         tos_version=UserProfile.TOS_VERSION_BEFORE_FIRST_LOGIN,
         acting_user=user_profile,
+        **extra_data,
     )
 
-    target_user.telegram_id = telegram_id
-    target_user.telegram_username = telegram_username
-    target_user.first_name = first_name
-    target_user.last_name = last_name
-    target_user.phone_number = phone_number
-    target_user.save()
+    # target_user.telegram_id = telegram_id
+    # target_user.telegram_username = telegram_username
+    # target_user.first_name = first_name
+    # target_user.last_name = last_name
+    # target_user.phone_number = phone_number
+    # target_user.save()
 
     return json_success(request, data={"user_id": target_user.id})
 
