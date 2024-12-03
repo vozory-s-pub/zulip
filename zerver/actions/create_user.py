@@ -510,6 +510,7 @@ def do_create_user(
     enable_marketing_emails: bool = True,
     email_address_visibility: int | None = None,
     add_initial_stream_subscriptions: bool = True,
+    **extra_data,
 ) -> UserProfile:
     with transaction.atomic():
         user_profile = create_user(
@@ -531,6 +532,12 @@ def do_create_user(
             enable_marketing_emails=enable_marketing_emails,
             email_address_visibility=email_address_visibility,
         )
+
+        # Update custom fields
+        for field, value in extra_data.items():
+            if hasattr(user_profile, field):
+                setattr(user_profile, field, value)
+        user_profile.save()
 
         event_time = user_profile.date_joined
         if not acting_user:
