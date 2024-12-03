@@ -1,6 +1,6 @@
 from collections.abc import Mapping
 from email.headerregistry import Address
-from typing import Annotated, Any, TypeAlias
+from typing import Annotated, Any, TypeAlias, Optional
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
@@ -674,6 +674,11 @@ def create_user_backend(
     email: str,
     password: str,
     full_name_raw: Annotated[str, ApiParamConfig("full_name")],
+    telegram_id: Optional[int] = None,
+    telegram_username: Optional[str] = None,
+    first_name: Optional[str] = None,
+    last_name: Optional[str] = None,
+    phone_number: Optional[str] = None,
 ) -> HttpResponse:
     if not user_profile.can_create_users:
         raise JsonableError(_("User not authorized to create users"))
@@ -725,6 +730,14 @@ def create_user_backend(
         tos_version=UserProfile.TOS_VERSION_BEFORE_FIRST_LOGIN,
         acting_user=user_profile,
     )
+
+    target_user.telegram_id = telegram_id
+    target_user.telegram_username = telegram_username
+    target_user.first_name = first_name
+    target_user.last_name = last_name
+    target_user.phone_number = phone_number
+    target_user.save()
+
     return json_success(request, data={"user_id": target_user.id})
 
 
