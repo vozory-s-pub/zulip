@@ -472,7 +472,10 @@ class UserProfile(AbstractBaseUser, PermissionsMixin, UserBaseSettings):
     full_name = models.CharField(max_length=MAX_NAME_LENGTH)
 
     # Custom fields
-    telegram_id = models.BigIntegerField(null=True, blank=True, help_text="Telegram User ID")
+    telegram_id = models.CharField( max_length=20,
+    null=True,
+    blank=True,
+    help_text="Telegram User ID")
     telegram_username = models.CharField(max_length=150, null=True, blank=True, help_text="Telegram Username")
     first_name = models.CharField(max_length=150, null=True, blank=True, help_text="First Name")
     last_name = models.CharField(max_length=150, null=True, blank=True, help_text="Last Name")

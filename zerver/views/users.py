@@ -674,7 +674,7 @@ def create_user_backend(
     email: str,
     password: str,
     full_name_raw: Annotated[str, ApiParamConfig("full_name")],
-    telegram_id: Optional[int] = None,
+    telegram_id: Optional[str] = None,
     telegram_username: Optional[str] = None,
     first_name: Optional[str] = None,
     last_name: Optional[str] = None,
